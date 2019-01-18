@@ -26,7 +26,7 @@ def part_decode(part):
 class Msg(Email):
 
     def __init__(self, contents):
-        super().__init__(contents)
+        super(Msg, self).__init__(contents)
         try:
             msg = email.message_from_string(contents.decode('utf-8', 'replace'))
         except Exception as e:
@@ -36,6 +36,7 @@ class Msg(Email):
         self.receiver = [addr[1].lower() for addr in email.utils.getaddresses(msg.get_all('to', []) + msg.get_all('cc', []))]
         self.subject = msg['Subject']
         self.timestamp = email.utils.parsedate(msg['Date'])
+        self.headers = decode_header(msg)
         if self.timestamp is not None:
             self.timestamp = datetime(
                 year=self.timestamp[0],
@@ -70,7 +71,7 @@ class Msg(Email):
 class MsgAttachment(Attachment):
 
     def __init__(self, attachment_data):
-        super().__init__(part_decode(attachment_data))
+        super(MsgAttachment, self).__init__(part_decode(attachment_data))
         self.name = self.sha256
         if attachment_data.get_filename():
             try:

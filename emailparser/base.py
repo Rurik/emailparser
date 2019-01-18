@@ -10,7 +10,7 @@ from zipfile import ZipFile
 log = logging.getLogger(__name__)
 
 
-class Email:
+class Email(object):
     def __init__(self, contents):
         self.md5 = hashlib.md5(contents).hexdigest()
         self.sha256 = hashlib.sha256(contents).hexdigest()
@@ -22,11 +22,12 @@ class Email:
         self.sender = None
         self.receiver = None
         self.body = None
+        self.headers = None
         self.timestamp = None
         self.attachments = []
 
 
-class Attachment:
+class Attachment(object):
     def __init__(self, contents):
         self.md5 = hashlib.md5(contents).hexdigest()
         self.sha256 = hashlib.sha256(contents).hexdigest()
