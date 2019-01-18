@@ -16,6 +16,7 @@ setup(
     url='',
     license=license,
     packages=find_packages(exclude=('tests', 'samples')),
+    include_package_data=True,
     install_requires=[
         'olefile',
         'pyunpack',
