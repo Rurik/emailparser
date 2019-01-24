@@ -11,6 +11,9 @@ log = logging.getLogger(__name__)
 
 
 class Email(object):
+    def default(self, o):
+        return o.__dict__
+
     def __init__(self, contents):
         self.md5 = hashlib.md5(contents).hexdigest()
         self.sha256 = hashlib.sha256(contents).hexdigest()
@@ -28,6 +31,9 @@ class Email(object):
 
 
 class Attachment(object):
+    def default(self, o):
+        return o.__dict__
+        
     def __init__(self, contents):
         self.md5 = hashlib.md5(contents).hexdigest()
         self.sha256 = hashlib.sha256(contents).hexdigest()

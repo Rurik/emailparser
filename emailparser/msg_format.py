@@ -24,19 +24,21 @@ def part_decode(part):
 
 
 class Msg(Email):
-
     def __init__(self, contents):
         super(Msg, self).__init__(contents)
         try:
             msg = email.message_from_string(contents.decode('utf-8', 'replace'))
         except Exception as e:
             log.exception('Unable to decode and parse msg contents')
+            return None
         # parse
         self.sender = email.utils.parseaddr(msg['From'])[1]
         self.receiver = [addr[1].lower() for addr in email.utils.getaddresses(msg.get_all('to', []) + msg.get_all('cc', []))]
         self.subject = msg['Subject']
         self.timestamp = email.utils.parsedate(msg['Date'])
-        self.headers = decode_header(msg)
+        #self.headers = decode_header(msg._headers)
+        self.headers = msg._headers
+
         if self.timestamp is not None:
             self.timestamp = datetime(
                 year=self.timestamp[0],
@@ -59,7 +61,7 @@ class Msg(Email):
         else:
             self.body += msg.get_payload(decode=True)
         # -- hack to make sure all attachments are accounted for and not snucked into epilogue
-        if len(self.attachments) ==0 and msg.get_boundary() is not None:
+        if len(self.attachments) == 0 and msg.get_boundary() is not None:
             for part in msg.as_string().split('--' + msg.get_boundary()):
                 if 'content-transfer-encoding' in part.lower() and 'base64' in part.lower():
                     attachment = email.message_from_string(part.strip())

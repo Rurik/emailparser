@@ -5,6 +5,7 @@ import json
 import olefile
 from .base import Email, Attachment
 from email.parser import Parser as EmailParser
+from datetime import datetime
 import email.utils
 
 id_json = {
@@ -1001,6 +1002,17 @@ class OutLookMsg(Email):
             # date/timestamp
             if 'date' in headers:
                 self.timestamp = email.utils.parsedate(headers['date'])
+                
+                if self.timestamp is not None:
+                    self.timestamp = datetime(
+                        year=self.timestamp[0],
+                        month=self.timestamp[1],
+                        day=self.timestamp[2],
+                        hour=self.timestamp[3],
+                        minute=self.timestamp[4],
+                        second=self.timestamp[5]
+                    )
+
             # sender
             if 'from' in headers and headers['from'] is not None:
                 self.sender = email.utils.parseaddr(headers['from'])[1]
