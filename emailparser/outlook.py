@@ -998,7 +998,8 @@ class OutLookMsg(Email):
         # extract data from headers
         if 'PidTagTransportMessageHeaders' in out:
             headers = EmailParser().parsestr(out['PidTagTransportMessageHeaders'])
-            self.headers = email.header.decode_header(headers)
+            #self.headers = email.header.decode_header(headers)
+            self.headers = headers._headers
             # date/timestamp
             if 'date' in headers:
                 self.timestamp = email.utils.parsedate(headers['date'])
